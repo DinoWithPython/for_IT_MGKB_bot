@@ -1,4 +1,4 @@
-import time
+﻿import time
 from telebot import types
 import config
 
@@ -18,6 +18,7 @@ def emias_stacionar(bot):
             button(text=config.BTN_STAC_TEXT_4),
             button(text=config.BTN_STAC_TEXT_5),
             button(text=config.BTN_STAC_TEXT_6),
+            button(text=config.BTN_STAC_TEXT_7),
             button(text=config.MAIN_MENU)
         )
         bot.send_message(
@@ -227,3 +228,64 @@ def emias_stacionar(bot):
             config.TEXT_STAC_14,
             reply_markup=kb_info_periodics
         )
+
+
+    @bot.message_handler(func=lambda message: message.text == config.BTN_STAC_TEXT_7)
+    def stacionar_fio_in_eu(message):
+        kb_fio_in_eu = types.ReplyKeyboardMarkup(
+            resize_keyboard=True, one_time_keyboard=True
+        )
+        button = types.KeyboardButton
+        kb_fio_in_eu.add(
+            button(text=config.BTN_STAC_TEXT_7),
+            button(text=config.MAIN_MENU),
+        )
+        bot.send_message(
+            message.chat.id,
+            config.TEXT_STAC_15,
+            # reply_markup=kb_fio_in_eu
+        )
+        bot.register_next_step_handler(message, fio_in_eu, kb_fio_in_eu)
+
+    def fio_in_eu(message, kb_fio_in_eu):
+        """Преобразует фио в англ."""
+        words = {
+            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z',
+            'и': 'i', 'й': 'i', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+            'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh',
+            'щ': 'shch', 'ы': 'y', 'ъ': 'ie', 'э': 'e', 'ю': 'iu', 'я': 'ia'
+            }
+        name = message.text
+        name = name.strip().lower().split()
+        s = []
+        if len(name) in (0, 1):
+            bot.send_message(
+                message.chat.id,
+                config.TEXT_STAC_16,
+                reply_markup=kb_fio_in_eu
+            )
+        elif len(name) == 2:
+            s.append(words.get(name[1][0], ''))
+            for i in name[0]:
+                s.append(words.get(i, ''))
+            bot.send_message(
+                message.chat.id,
+                ''.join(s),
+                reply_markup=kb_fio_in_eu
+            )
+        elif len(name) >= 3:
+            s.append(words.get(name[1][0], ''))
+            s.append(words.get(name[2][0], ''))
+            for i in name[0]:
+                s.append(words.get(i, ''))
+            bot.send_message(
+                message.chat.id,
+                ''.join(s),
+                reply_markup=kb_fio_in_eu
+            )
+        else:
+            bot.send_message(
+                message.chat.id,
+                config.TEXT_STAC_16,
+                reply_markup=kb_fio_in_eu
+            )

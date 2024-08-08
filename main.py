@@ -1,4 +1,4 @@
-# Подключаем модуль для Телеграма
+﻿# Подключаем модуль для Телеграма
 import datetime
 import os
 import time
@@ -17,8 +17,12 @@ from alerts_bot import alert_func
 # Токен мгкб бота
 load_dotenv()
 token = os.getenv("TOKEN")
-bot = telebot.TeleBot(token)
 
+class BotData:
+    bot = telebot.TeleBot(token)
+#bot = telebot.TeleBot(token)
+
+bot = BotData.bot
 # Админка бота
 admin_bot(bot)
 
@@ -63,6 +67,7 @@ emias_stacionar(bot)
 # оповещения дляИТ банды
 alert_func(bot)
 
+
 @bot.message_handler(commands=["help"])
 def help_func(message):
     bot.send_message(
@@ -99,12 +104,16 @@ def send_admin(message):
     #     time.sleep(0.5)
 
 
-while True:
-    try:
-        print("Бот пашет за копейки...")
-        bot.polling(non_stop=True, interval=1)
-        print("Бот уволился")
-    except Exception as e:
-        with open(config.PATH_ERRORS, "a+") as logs:
-            print(f"[{now()}]Error:\n{str(e)}", file=logs)
-        time.sleep(5)
+# while True:
+#     try:
+#         print("Бот пашет за копейки...")
+#         bot.polling(non_stop=True, interval=1)
+#         print("Бот уволился")
+#     except Exception as e:
+#         with open(config.PATH_ERRORS, "a+") as logs:
+#             print(f"[{now()}]Error:\n{str(e)}", file=logs)
+#         time.sleep(5)
+if __name__ == "__main__":
+    print("Бот пашет за копейки...")
+    bot.infinity_polling()
+    print("Бот уволился")

@@ -56,7 +56,7 @@ def linux_func(bot):
             f"{config.TEXT_LNX_4}{config.ASSISTANT_SERVER}",
         )
 
-    @bot.message_handler(func=lambda message: message.text == config.BTN_LNX_TEXT_1_1)
+    @bot.message_handler(func=lambda message: message.text == config.BTN_LNX_TEXT_1_2)
     def assistant_rpm(message):
         kb_type_assistant_rpm = types.ReplyKeyboardMarkup(
             resize_keyboard=True, one_time_keyboard=True
